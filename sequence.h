@@ -11,6 +11,7 @@ public:
 	const QChar currentChar() const;
 	void markCurrentAsCoincidence();
 	bool toNext();
+	bool isFinished() const;
 
 	int getN() const { return n; }
 	const QString & getChars() const { return chars; }

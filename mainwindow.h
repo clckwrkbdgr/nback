@@ -17,6 +17,7 @@ private slots:
 	void mark();
 	void next();
 	void clearLetter();
+	void on_settings_clicked();
 private:
 	Ui::MainWindow ui;
 	Sequence sequence;

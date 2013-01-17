@@ -34,6 +34,11 @@ void Sequence::markCurrentAsCoincidence()
 	}
 }
 
+bool Sequence::isFinished() const
+{
+	return (current >= chars.count());
+}
+
 bool Sequence::toNext()
 {
 	if(current >= chars.count())

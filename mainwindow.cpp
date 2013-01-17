@@ -1,4 +1,5 @@
 #include <QtDebug>
+#include "settings.h"
 #include "mainwindow.h"
 	
 QString getRandomString(int size, int coincidenceCount, int N)
@@ -27,12 +28,21 @@ QString getRandomString(int size, int coincidenceCount, int N)
 MainWindow::MainWindow(QWidget * parent)
 	: QMainWindow(parent)
 {
+	Settings::load();
 	ui.setupUi(this);
 	prepare();
 }
 
 MainWindow::~MainWindow()
 {
+	stop();
+}
+
+void MainWindow::on_settings_clicked()
+{
+	timer.stop();
+	Settings dialog;
+	dialog.exec();
 	stop();
 }
 
@@ -44,7 +54,7 @@ void MainWindow::prepare()
 
 	connect(ui.run, SIGNAL(clicked()), this, SLOT(run()));
 	ui.view->setText("");
-	sequence.restart(getRandomString(10, 3, 1), 1);
+	sequence.restart(getRandomString(Settings::getSequenceSize(), Settings::getSequenceSize() /4, Settings::getN()), Settings::getN());
 
 	ui.run->setEnabled(true);
 	ui.stop->setEnabled(false);
@@ -89,14 +99,21 @@ void MainWindow::stop()
 {
 	timer.stop();
 	QStringList lines;
-	lines << tr("Coincidences: %1, marks set: %2, errors: %3")
-			.arg(sequence.getCoincidences().size())
-			.arg(sequence.getMarks().size())
-			.arg(sequence.getErrors().size());
-	lines << "chars: " + sequence.getChars();
-	lines << "marks: " + toString(sequence.getMarks(),        sequence.getChars().count());
-	lines << "error: " + toString(sequence.getErrors(),       sequence.getChars().count());
-	lines << "coinc: " + toString(sequence.getCoincidences(), sequence.getChars().count());
+	lines << tr("N: %1").arg(Settings::getN());
+	lines << tr("Size: %1").arg(Settings::getSequenceSize());
+	lines << "";
+	if(sequence.isFinished()) {
+		lines << tr("Coincidences: %1, marks set: %2, errors: %3")
+				.arg(sequence.getCoincidences().size())
+				.arg(sequence.getMarks().size())
+				.arg(sequence.getErrors().size());
+		lines << "chars: " + sequence.getChars();
+		lines << "marks: " + toString(sequence.getMarks(),        sequence.getChars().count());
+		lines << "error: " + toString(sequence.getErrors(),       sequence.getChars().count());
+		lines << "coinc: " + toString(sequence.getCoincidences(), sequence.getChars().count());
+	} else {
+		lines << tr("Interrupted");
+	}
 	ui.summary->setPlainText(lines.join("\n"));
 	prepare();
 }
