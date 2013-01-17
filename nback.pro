@@ -8,7 +8,8 @@ SEQUENCE_TEST {
 	SOURCES += sequence.cpp
 	HEADERS += sequence.h
 } else {
+	QT += sql
 	FORMS += mainwindow.ui settings.ui
-	SOURCES += main.cpp mainwindow.cpp sequence.cpp settings.cpp
-	HEADERS += mainwindow.h sequence.h settings.h
+	SOURCES += main.cpp mainwindow.cpp sequence.cpp settings.cpp statistics.cpp
+	HEADERS += mainwindow.h sequence.h settings.h statistics.h
 }
