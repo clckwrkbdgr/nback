@@ -9,6 +9,6 @@ SEQUENCE_TEST {
 	HEADERS += sequence.h
 } else {
 	FORMS += mainwindow.ui
-	SOURCES += main.cpp mainwindow.cpp
-	HEADERS += mainwindow.h
+	SOURCES += main.cpp mainwindow.cpp sequence.cpp
+	HEADERS += mainwindow.h sequence.h
 }
