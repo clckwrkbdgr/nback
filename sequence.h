@@ -17,10 +17,11 @@ public:
 	const QString & getChars() const { return chars; }
 	const QSet<int> & getCoincidences() const;
 	const QSet<int> & getErrors() const;
+	const QSet<int> & getMissed() const;
 	const QSet<int> & getMarks() const;
 public:
 	QString chars;
 	int n, current;
-	QSet<int> marks, coincidences, errors;
+	QSet<int> marks, coincidences, errors, missed;
 };
 

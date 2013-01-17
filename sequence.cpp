@@ -13,6 +13,7 @@ void Sequence::restart(const QString & chars, int n)
 	marks.clear();
 	coincidences.clear();
 	errors.clear();
+	missed.clear();
 
 	for(int i = n; i < chars.count(); ++i) {
 		if(chars[i] == chars[i - n]) {
@@ -45,7 +46,7 @@ bool Sequence::toNext()
 		return false;
 
 	if(coincidences.contains(current) && !marks.contains(current)) {
-		errors << current;
+		missed << current;
 	}
 
 	++current;
@@ -58,6 +59,11 @@ bool Sequence::toNext()
 const QSet<int> & Sequence::getCoincidences() const
 {
 	return coincidences;
+}
+
+const QSet<int> & Sequence::getMissed() const
+{
+	return missed;
 }
 
 const QSet<int> & Sequence::getErrors() const
@@ -102,6 +108,7 @@ private slots:
 		QTest::addColumn<int>    ("n");
 		QTest::addColumn<QString>("markString");
 		QTest::addColumn<QString>("expectedErrors");
+		QTest::addColumn<QString>("expectedMissed");
 		QTest::addColumn<QString>("expectedCoincidences");
 
 		QTest::newRow("1: no errors")
@@ -109,23 +116,27 @@ private slots:
 			                 << 1
 			                 << QString("     1  1    1 ")
 			                 << QString("               ")
+			                 << QString("               ")
 			                 << QString("     1  1    1 ");
 		QTest::newRow("1: errors")
 			                 << QString("ASDFAADFFGDGDDG")
 			                 << 1
 			                 << QString("  1   1 1   11 ")
-			                 << QString("  1  11     1  ")
+			                 << QString("  1   1     1  ")
+			                 << QString("     1         ")
 			                 << QString("     1  1    1 ");
 		QTest::newRow("2: errors")
 			                 << QString("ASDFAADFFGDGDDG")
 			                 << 2
 			                 << QString("     1  1  1 11")
-			                 << QString("     1  1   111")
+			                 << QString("     1  1    11")
+			                 << QString("            1  ")
 			                 << QString("           11  ");
 		QTest::newRow("4: no errors")
 			                 << QString("ASDFAADFFGDGDDG")
 			                 << 4
 			                 << QString("    1  1       ")
+			                 << QString("               ")
 			                 << QString("      1   1    ")
 			                 << QString("    1 11  1    ");
 	}
@@ -134,6 +145,7 @@ private slots:
 		QFETCH(int,     n);
 		QFETCH(QString, markString);
 		QFETCH(QString, expectedErrors);
+		QFETCH(QString, expectedMissed);
 		QFETCH(QString, expectedCoincidences);
 
 		QList<bool> marks = toBoolList(markString);
@@ -151,6 +163,7 @@ private slots:
 
 		QString result       = toString(sequence.getMarks(),        chars.count()); QCOMPARE(result,       markString);
 		QString errors       = toString(sequence.getErrors(),       chars.count()); QCOMPARE(errors,       expectedErrors);
+		QString missed       = toString(sequence.getMissed(),       chars.count()); QCOMPARE(missed,       expectedMissed);
 		QString coincidences = toString(sequence.getCoincidences(), chars.count()); QCOMPARE(coincidences, expectedCoincidences);
 	}
 private:

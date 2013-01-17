@@ -24,6 +24,14 @@ QString getRandomString(int size, int coincidenceCount, int N)
 	return result;
 }
 
+QString toString(const QSet<int> & set, int size)
+{
+	QString result = QString(size, ' ');
+	foreach(int value, set) {
+		result[value] = '1';
+	}
+	return result;
+}
 
 MainWindow::MainWindow(QWidget * parent)
 	: QMainWindow(parent)
@@ -87,14 +95,6 @@ void MainWindow::run()
 	ui.mark->setEnabled(true);
 }
 
-QString toString(const QSet<int> & set, int size) {
-	QString result = QString(size, ' ');
-	foreach(int value, set) {
-		result[value] = '1';
-	}
-	return result;
-}
-
 void MainWindow::stop()
 {
 	timer.stop();
@@ -103,14 +103,8 @@ void MainWindow::stop()
 	lines << tr("Size: %1").arg(Settings::getSequenceSize());
 	lines << "";
 	if(sequence.isFinished()) {
-		lines << tr("Coincidences: %1, marks set: %2, errors: %3")
-				.arg(sequence.getCoincidences().size())
-				.arg(sequence.getMarks().size())
-				.arg(sequence.getErrors().size());
-		lines << "chars: " + sequence.getChars();
-		lines << "marks: " + toString(sequence.getMarks(),        sequence.getChars().count());
-		lines << "error: " + toString(sequence.getErrors(),       sequence.getChars().count());
-		lines << "coinc: " + toString(sequence.getCoincidences(), sequence.getChars().count());
+		lines << tr("Real coincidences: %1, marks set: %2").arg(sequence.getCoincidences().size()).arg(sequence.getMarks().size());
+		lines << tr("Wrong marks: %1, missed coincidences: %2") .arg(sequence.getErrors().size()) .arg(sequence.getMissed().size());
 	} else {
 		lines << tr("Interrupted");
 	}
