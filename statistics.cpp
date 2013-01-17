@@ -1,3 +1,5 @@
+#include <QtCore/QDir>
+#include <QtGui/QDesktopServices>
 #include <QtSql/QSqlDatabase>
 #include <QtCore/QVariant>
 #include <QtSql/QSqlQuery>
@@ -15,8 +17,15 @@ void showError(const QSqlError & error)
 Statistics::Statistics()
 	: sessionId(0)
 {
+	QString userDataDirName = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
+	QDir userDataDir(userDataDirName);
+	if(!userDataDir.exists()) {
+		userDataDir.mkpath(userDataDirName);
+	}
+	QString databaseFileName = userDataDir.absoluteFilePath("nbackstats");
+
 	QSqlDatabase db = QSqlDatabase::addDatabase("QSQLITE", "stat");
-	db.setDatabaseName(":memory:");
+	db.setDatabaseName(databaseFileName);
 	bool ok = db.open();
 	if(!ok) {
 		showError(db.lastError());
