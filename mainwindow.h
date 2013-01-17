@@ -2,6 +2,7 @@
 #include <QtGui/QMainWindow>
 #include <QtCore/QTimer>
 #include "sequence.h"
+#include "statistics.h"
 #include "ui_mainwindow.h"
 
 class MainWindow : public QMainWindow {
@@ -21,6 +22,7 @@ private slots:
 private:
 	Ui::MainWindow ui;
 	Sequence sequence;
+	Statistics stats;
 	QTimer timer;
 
 	void singleShot(int ms, const char * slot);

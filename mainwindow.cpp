@@ -103,8 +103,10 @@ void MainWindow::stop()
 	lines << tr("Size: %1").arg(Settings::getSequenceSize());
 	lines << "";
 	if(sequence.isFinished()) {
+		stats.add(Settings::getN(), Settings::getSequenceSize(), sequence.getErrors().size(), sequence.getMissed().size());
 		lines << tr("Real coincidences: %1, marks set: %2").arg(sequence.getCoincidences().size()).arg(sequence.getMarks().size());
 		lines << tr("Wrong marks: %1, missed coincidences: %2") .arg(sequence.getErrors().size()) .arg(sequence.getMissed().size());
+		lines << tr("Current session tries: %1, current session error ratio: %2") .arg(stats.currentTryCount()) .arg(stats.currentErrorRatio());
 	} else {
 		lines << tr("Interrupted");
 	}
