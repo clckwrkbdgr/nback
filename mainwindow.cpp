@@ -49,8 +49,10 @@ MainWindow::~MainWindow()
 void MainWindow::on_settings_clicked()
 {
 	timer.stop();
-	Settings dialog;
-	dialog.exec();
+	{
+		Settings dialog;
+		dialog.exec();
+	}
 	stop();
 }
 
